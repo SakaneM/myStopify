@@ -1,0 +1,11 @@
+<html>
+  <body>
+    <script src="file:///usr/local/lib/node_modules/stopify/dist/stopify.bundle.js"></script>
+    <!-- Stopify runtime system → stopify-path stopify.bundle.js -->
+    <script>
+    var runner = stopify.stopify("Dateoutput.js");
+    runner.g = { console, document, Date };
+    runner.run(() => console.log("done"));
+    </script>
+  </body>
+</html>

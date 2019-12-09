@@ -1,0 +1,28 @@
+<html>
+  <body> 
+    <script src="file:///usr/local/lib/node_modules/stopify/dist/stopify.bundle.js"></script>
+    <script language="javascript" type="text/javascript">
+      var runner = stopify.stopify("RunStopoutput.js");
+      runner.g = { console, document, Date };
+      function ClickToRun() {
+        document.getElementById("Now").innerHTML = "RUN";
+        runner.run(() => console.log("done run"));
+      }
+      function ClickToPause() {
+        document.getElementById("Now").innerHTML = "PAUSE";
+        runner.pause(() => console.log("pause"));
+      }
+      function ClickToResume() {
+        document.getElementById("Now").innerHTML = "RESTART";
+        runner.resume(() => console.log("Restart"));
+      }
+    </script>
+  </body>
+  <input type="button" value="RUN" onclick="ClickToRun();"/>
+  <!-- Runは押した回数だけ新規実行されるが、それまでの実行は全て止まる -->
+  <input type="button" value="Pause" onclick="ClickToPause();"/>  
+  <!-- Runを複数回実行するとPauseを押せる回数の帳尻が合わなくなってバグる -->
+  <input type="button" value="Resume" onclick="ClickToResume();"/>
+  <!-- Resumeは2回以上押してもエラーメッセージが出るだけ -->
+  <div id="Now"></div>
+</html>
