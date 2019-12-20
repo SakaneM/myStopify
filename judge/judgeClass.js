@@ -15,63 +15,63 @@ var Judge = /** @class */ (function () {
     //     }
     //     return this.gcd([a[1], a[0] % a[1]])
     // }
-    Judge.prototype.makeDouble = function (a) {
-        return 2 * a;
+    Judge.prototype.makeMulti = function (input) {
+        return input[0] * input[1];
     };
     Judge.prototype.getFunc = function (func) {
         // public getFunc(func: string):number{
         // Puppyのfunc部を返す
-        return this.makeDouble;
+        return this.makeMulti;
     };
-    Judge.prototype.expect = function (func, inputs) {
-        // inputs.forEach((value: number|string) => {　//入力の数指定ができない
+    Judge.prototype.expect = function (func) {
+        var inputs = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            inputs[_i - 1] = arguments[_i];
+        }
+        var ans = func(inputs);
+        this.output.push(ans);
+        //outputで出力を管理
+        //pushする際に型エラーが起きたらどうするか
+        return this;
+    };
+    Judge.prototype.main = function (func, inputs) {
         for (var _i = 0, inputs_1 = inputs; _i < inputs_1.length; _i++) {
             var input = inputs_1[_i];
             var ans = func(input);
             this.output.push(ans);
-            //outputで出力を管理
-            //pushする際に型エラーが起きたらどうするか
         }
-        ;
         return this;
     };
     Judge.prototype.toBe = function (matchVal) {
         var ans = this.output.shift();
-        console.log('   youranswer:', ans);
         if (matchVal === ans) {
             this.output = [];
-            return true;
+            console.log('   youranswer:', ans, '  correct');
+            return 1;
         }
         this.output = [];
-        return false;
+        console.log('   youranswer:', ans);
+        return 0;
     };
     Judge.prototype.match = function (matchVal) {
         var _this = this;
-        var count = this.output.length;
+        var correct = 0;
         matchVal.forEach(function (match) {
             var ans = _this.output.shift();
-            console.log('   youranswer:', ans);
             if (match === ans) {
-                count--;
+                console.log('   youranswer:', ans, '  correct');
+                correct++;
+            }
+            else {
+                console.log('   youranswer:', ans);
             }
         });
-        if (count === 0 && this.output.length === 0) {
-            //全て正解 && 出力結果に過不足なければtrue
-            return true;
-        }
         this.output = [];
-        return false;
+        return correct;
     };
     Judge.prototype.test = function (testname, score, func) {
         console.log('test:', testname);
-        if (func()) {
-            // イベントを呼ぶ処理(maxscore)に置き換える
-            console.log('   score:', score);
-        }
-        // イベントを呼ぶ(0点)
-        else {
-            console.log('   score:', 0);
-        }
+        console.log('   score:', score * func());
     };
     return Judge;
 }());

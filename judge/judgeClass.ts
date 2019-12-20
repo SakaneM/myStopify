@@ -15,65 +15,63 @@ class Judge {
     //     }
     //     return this.gcd([a[1], a[0] % a[1]])
     // }
-    public makeDouble(a: number):number{
-        return 2*a
+    public makeMulti(input: number[]):number{
+        return input[0]*input[1]
     }
 
-    public getFunc(func: string):(arg: any) => any{
+    public getFunc(func: string):(...arg: any) => any{
         // public getFunc(func: string):number{
         // Puppyのfunc部を返す
-        return this.makeDouble
+        return this.makeMulti
     }
 
-    public expect(func: (any0: any) => any, inputs: number[]|string[]|number[][]){
-        // inputs.forEach((value: number|string) => {　//入力の数指定ができない
+    public expect(func: (...any: any) => any, ...inputs: any){
+        const ans = func(inputs);
+        this.output.push(ans);
+        //outputで出力を管理
+        //pushする際に型エラーが起きたらどうするか
+        return this;
+    }
+
+    public main(func: (arg: any) => any, inputs: any){
         for(const input of inputs){
             const ans = func(input);
             this.output.push(ans);
-            //outputで出力を管理
-            //pushする際に型エラーが起きたらどうするか
-        };
+        }
         return this;
     }
 
     public toBe(matchVal: number|string) {
         const ans = this.output.shift()
-        console.log('   youranswer:',ans)
         if (matchVal === ans) {
             this.output = []
-            return true;
+            console.log('   youranswer:',ans,'  correct')
+            return 1;
         }
         this.output = []
-        return false;
+        console.log('   youranswer:',ans)
+        return 0;
     }
 
-    public match(matchVal: number[]|string[]){
-        var count = this.output.length
+    public match(matchVal: number[]|string[]): number{
+        var correct = 0;
         matchVal.forEach((match: number|string) => {
             const ans = this.output.shift()
-            console.log('   youranswer:',ans)
             if (match === ans){
-                count--;
+                console.log('   youranswer:',ans,'  correct')
+                correct++;
+            }
+            else{
+                console.log('   youranswer:',ans)
             }
         })
-        if (count === 0 && this.output.length === 0){
-            //全て正解 && 出力結果に過不足なければtrue
-            return true;
-        }
         this.output = []
-        return false;
+        return correct
     }
 
-    public test(testname: string, score: number, func: () => boolean){
+    public test(testname: string, score: number, func: () => number){
         console.log('test:', testname);
-        if (func()){
-            // イベントを呼ぶ処理(maxscore)に置き換える
-            console.log('   score:',score);
-        }
-        // イベントを呼ぶ(0点)
-        else{
-            console.log('   score:',0);
-        }
+        console.log('   score:', score*func());
     }
 }
 
